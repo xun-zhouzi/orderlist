@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.OrderlistmenuMapper">
+
+    <resultMap type="Orderlistmenu" id="OrderlistmenuResult">
+        <result property="id"    column="id"    />
+        <result property="menuName"    column="menuName"    />
+        <result property="url"    column="url"    />
+        <result property="price"    column="price"    />
+    </resultMap>
+
+    <sql id="selectOrderlistmenuVo">
+        select id, menuName, url, price from orderlistmenu
+    </sql>
+
+    <select id="selectOrderlistmenuList" parameterType="Orderlistmenu" resultMap="OrderlistmenuResult">
+        <include refid="selectOrderlistmenuVo"/>
+        <where>
+            <if test="menuName != null  and menuName != ''"> and menuName like concat('%', #{menuName}, '%')</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="price != null "> and price = #{price}</if>
+        </where>
+    </select>
+
+    <select id="selectOrderlistmenuById" parameterType="Long" resultMap="OrderlistmenuResult">
+        <include refid="selectOrderlistmenuVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOrderlistmenu" parameterType="Orderlistmenu">
+        insert into orderlistmenu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="menuName != null">menuName,</if>
+            <if test="url != null">url,</if>
+            <if test="price != null">price,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="menuName != null">#{menuName},</if>
+            <if test="url != null">#{url},</if>
+            <if test="price != null">#{price},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOrderlistmenu" parameterType="Orderlistmenu">
+        update orderlistmenu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="menuName != null">menuName = #{menuName},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="price != null">price = #{price},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderlistmenuById" parameterType="Long">
+        delete from orderlistmenu where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderlistmenuByIds" parameterType="String">
+        delete from orderlistmenu where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

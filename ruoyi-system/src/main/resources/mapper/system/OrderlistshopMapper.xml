@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.OrderlistshopMapper">
+
+    <resultMap type="Orderlistshop" id="OrderlistshopResult">
+        <result property="id"    column="id"    />
+        <result property="shopName"    column="shopName"    />
+    </resultMap>
+
+    <sql id="selectOrderlistshopVo">
+        select id, shopName from orderlistshop
+    </sql>
+
+    <select id="selectOrderlistshopList" parameterType="Orderlistshop" resultMap="OrderlistshopResult">
+        <include refid="selectOrderlistshopVo"/>
+        <where>
+            <if test="shopName != null  and shopName != ''"> and shopName like concat('%', #{shopName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectOrderlistshopById" parameterType="Long" resultMap="OrderlistshopResult">
+        <include refid="selectOrderlistshopVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOrderlistshop" parameterType="Orderlistshop" useGeneratedKeys="true" keyProperty="id">
+        insert into orderlistshop
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopName != null">shopName,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopName != null">#{shopName},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOrderlistshop" parameterType="Orderlistshop">
+        update orderlistshop
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopName != null">shopName = #{shopName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderlistshopById" parameterType="Long">
+        delete from orderlistshop where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderlistshopByIds" parameterType="String">
+        delete from orderlistshop where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
